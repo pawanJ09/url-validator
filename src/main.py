@@ -1,4 +1,17 @@
 import pandas as pd
+import requests
+
+
+def validate_url(check_url: str) -> str:
+    try:
+        response = requests.head(url)
+        if response.status_code == 200:
+            return 'Good'
+    except Exception as e:
+        # print(e)
+        pass
+    return 'Bad'
+
 
 if __name__ == "__main__":
     print('Starting with URL Validator')
@@ -15,6 +28,9 @@ if __name__ == "__main__":
         url_df = pd.DataFrame(df.loc[:, cols_list])
         url_list = url_df.values.tolist()
         print(f'\nURLs found: {url_list}')
+        for urls in url_list:
+            for url in urls:
+                print(f'{url} Connection Status: {validate_url(url)}')
     else:
         print('No columns containing URL found. Quiting program.')
 
