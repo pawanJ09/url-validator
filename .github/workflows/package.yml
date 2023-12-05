@@ -2,7 +2,7 @@ name: Package URL Validator
 
 on:
   workflow_run:
-    workflows: [ "Python Lint" ]
+    workflows: [ "Check Syntax Errors" ]
     branches: [ "master" ]
     types:
       - completed
