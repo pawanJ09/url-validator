@@ -1,4 +1,5 @@
 [![Project Build](https://github.com/pawanJ09/url-validator/actions/workflows/build.yml/badge.svg)](https://github.com/pawanJ09/url-validator/actions/workflows/build.yml)
+[![Project Packaging](https://github.com/pawanJ09/url-validator/actions/workflows/package.yml/badge.svg)](https://github.com/pawanJ09/url-validator/actions/workflows/package.yml)
 
 # Excel URL Validator
 
