@@ -34,3 +34,4 @@ python ./src/main.py
 ## Test Results
 
 ![Test Result with Status](./images/url-validator-test-result-1.png)
+![Test Result with Excel File](./images/url-validator-test-result-2.png)
