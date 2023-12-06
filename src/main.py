@@ -1,43 +1,72 @@
 import pandas as pd
 import requests
+from pandas import DataFrame
+
+
+filename = '../sheet/test-urls.xlsx'
 
 
 def validate_url(check_url: str) -> str:
+    """
+    This function validate if the URL is valid and returns a successful return code
+    :param check_url:
+    :return: str 'Good' or 'Bad'
+    """
     try:
-        response = requests.head(url)
+        response = requests.head(check_url)
         if response.status_code == 200:
+            print(f'{check_url} Response Status Code: {response.status_code} Connection Status: Good')
             return 'Good'
+        print(f'{check_url} Status Code: {response.status_code} Connection Status: Bad')
     except Exception as e:
-        # print(e)
-        pass
+        print(f'{check_url} Status Code: Exception Connection Status: Bad')
     return 'Bad'
+
+
+def generate_connection_stats(excel_df) -> DataFrame:
+    """
+    This function takes the DataFrame from Excel file, filters the columns with name 'URL',
+    validates the urls, adds it to the DataFrame and returns the DataFrame
+    :param excel_df:
+    :return: DataFrame with Status column
+    """
+    connection_stats = list()
+    url_cols_list = list()
+    excel_cols = excel_df.keys().values
+    for col in excel_cols:
+        if 'url' in col.lower():
+            url_cols_list.append(col)
+    if len(url_cols_list) > 0:
+        print(f'\nFetching data for columns: {url_cols_list}')
+        url_df = pd.DataFrame(df.loc[:, url_cols_list])
+        url_val_list = url_df.values.tolist()
+        for urls in url_val_list:
+            for url in urls:
+                connection_stats.append(validate_url(url))
+    else:
+        print('No columns containing URL found. Quiting program.')
+    excel_df["Status"] = connection_stats
+    print('\n\nUpdated DataFrame')
+    print(f'{excel_df}')
+    return excel_df
+
+
+def write_to_excel(new_df):
+    """
+    This function writes the provided DataFrame to the current Excel file in the new sheet as
+    'URL Status'
+    :param new_df:
+    :return: void
+    """
+    with pd.ExcelWriter(filename, mode='a', if_sheet_exists="replace") as writer:
+        new_df.to_excel(writer, sheet_name='URL Status', index=False)
 
 
 if __name__ == "__main__":
     print('Starting with URL Validator')
-    df = pd.read_excel('../sheet/test-urls.xlsx', sheet_name='Sheet1')
+    df = pd.read_excel(filename, sheet_name='Sheet1')
     print('Excel file contents: ')
     print(df)
-    df_cols = df.keys().values
-    df_cols_count = len(df_cols)
-    cols_list = list()
-    connection_stats = list()
-    for col in df_cols:
-        if 'url' in col.lower():
-            cols_list.append(col)
-    if len(cols_list) > 0:
-        print(f'\nFetching data for columns: {cols_list}')
-        url_df = pd.DataFrame(df.loc[:, cols_list])
-        url_list = url_df.values.tolist()
-        # print(f'\nURLs found: {url_list}')
-        for urls in url_list:
-            for url in urls:
-                connection_stat = validate_url(url)
-                print(f'{url} Connection Status: {connection_stat}')
-                connection_stats.append(connection_stat)
-    else:
-        print('No columns containing URL found. Quiting program.')
-    df["Status"] = connection_stats
-    print('\n\nUpdated DataFrame')
-    print(f'{df}')
+    write_to_excel(generate_connection_stats(df))
+
 
