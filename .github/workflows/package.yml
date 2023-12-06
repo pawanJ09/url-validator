@@ -3,7 +3,7 @@ name: Package URL Validator
 on:
   workflow_run:
     workflows: [ "Check Syntax Errors" ]
-    branches: [ "master" ]
+    branches: [ "main" ]
     types:
       - completed
 
