@@ -2,8 +2,9 @@ import pandas as pd
 import requests
 from pandas import DataFrame
 
-
 filename = '../sheet/test-urls.xlsx'
+header = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 ("
+                        "KHTML, like Gecko) Version/15.3 Safari/605.1.15"}
 
 
 def validate_url(check_url: str) -> str:
@@ -13,9 +14,10 @@ def validate_url(check_url: str) -> str:
     :return: str 'Good' or 'Bad'
     """
     try:
-        response = requests.head(check_url)
+        response = requests.get(check_url, headers=header, timeout=3)
         if response.status_code == 200:
-            print(f'{check_url} Response Status Code: {response.status_code} Connection Status: Good')
+            print(
+                f'{check_url} Response Status Code: {response.status_code} Connection Status: Good')
             return 'Good'
         print(f'{check_url} Status Code: {response.status_code} Connection Status: Bad')
     except Exception as e:
@@ -68,5 +70,3 @@ if __name__ == "__main__":
     print('Excel file contents: ')
     print(df)
     write_to_excel(generate_connection_stats(df))
-
-
